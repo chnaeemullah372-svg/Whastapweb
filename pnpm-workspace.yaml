@@ -159,7 +159,12 @@ overrides:
   "@expo/ngrok-bin>@expo/ngrok-bin-win32-x64": "-"
   # drizzle-kit uses esbuild internally on an older version that's vulnerable, this overrides it
   "@esbuild-kit/esm-loader": "npm:tsx@^4.21.0"
-  esbuild: "0.27.3"
+  # Hostinger's build host blocks executing native binaries (EACCES spawning
+  # esbuild's downloaded binary during postinstall), so every esbuild
+  # resolution in the workspace (including vite's/rollup's internal use) is
+  # forced onto the WASM build instead, which runs inside Node's own process
+  # and needs no native binary execution at all.
+  esbuild: "npm:esbuild-wasm@0.27.3"
 
 allowBuilds:
   '@whiskeysockets/baileys': true
